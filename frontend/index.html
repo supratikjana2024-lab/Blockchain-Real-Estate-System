@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Blockchain Property Portal</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+margin:0;
+}
+
+header{
+background:#1e3a8a;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.container{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+padding:30px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+}
+
+button{
+padding:10px;
+background:#2563eb;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+pre{
+background:black;
+color:#00ff90;
+padding:15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h2>Blockchain Real Estate System</h2>
+
+</header>
+
+
+<div class="container">
+
+<div class="card">
+
+<h3>Register Property</h3>
+
+<input id="pid" placeholder="Property ID">
+<input id="owner" placeholder="Owner">
+<input id="location" placeholder="Location">
+
+<button onclick="registerProperty()">Register</button>
+
+</div>
+
+
+<div class="card">
+
+<h3>Check Property Owner</h3>
+
+<input id="search_id" placeholder="Property ID">
+
+<button onclick="getProperty()">Check</button>
+
+<p id="owner_result"></p>
+
+</div>
+
+
+<div class="card">
+
+<h3>Blockchain Explorer</h3>
+
+<button onclick="getChain()">Load Blockchain</button>
+
+</div>
+
+
+<div class="card">
+
+<pre id="chain"></pre>
+
+</div>
+
+</div>
+
+
+<script>
+
+const API="http://127.0.0.1:8000"
+
+
+async function registerProperty(){
+
+let pid=document.getElementById("pid").value
+let owner=document.getElementById("owner").value
+let location=document.getElementById("location").value
+
+let res=await fetch(`${API}/register-property?property_id=${pid}&owner=${owner}&location=${location}`,{
+
+method:"POST"
+
+})
+
+let data=await res.json()
+
+alert(data.message)
+
+}
+
+
+async function getProperty(){
+
+let id=document.getElementById("search_id").value
+
+let res=await fetch(`${API}/property/${id}`)
+
+let data=await res.json()
+
+document.getElementById("owner_result").innerText=
+
+"Owner: "+data.owner+" Location: "+data.location
+
+}
+
+
+async function getChain(){
+
+let res=await fetch(`${API}/chain`)
+
+let data=await res.json()
+
+document.getElementById("chain").innerText=
+
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>
